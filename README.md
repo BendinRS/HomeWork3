@@ -180,7 +180,7 @@ Complete!
 ![Рисунок 5](http://images.vfl.ru/ii/1628712017/4eaab320/35467854.png "Размечены диски")
 
 + opt/cache - будет пулом кэширования, opt/imen - Кэшируется
-```[root@lvm vagrant]# lvconvert --type cache opt/imen  --cachepool opt/cache
+``` [root@lvm vagrant]# lvconvert --type cache opt/imen  --cachepool opt/cache
    WARNING: Converting opt/cache to cache pool's data volume with metadata wiping.
    THIS WILL DESTROY CONTENT OF LOGICAL VOLUME (filesystem etc.)
    Do you really want to convert opt/cache? [y/n]: y
