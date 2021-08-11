@@ -108,6 +108,7 @@ Writing superblocks and filesystem accounting information: done
 ## /home - сделать том для снапшотов
 
 + Сгенерируем файлы в /home/ 
+
 ```[root@lvm vagrant]# touch /home/file{1..20} ```
 + Снимаем снапшот
  ```[root@lvm vagrant]# lvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Home
