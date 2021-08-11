@@ -197,6 +197,8 @@ Complete!
 
 Итог - я убил машину:)
 
+## Попытка № 2
+
 https://winitpro.ru/index.php/2020/11/20/ssd-lvm-cache-v-linux-centos/ - по кэшированию инфу брал с этого сайта. 
 
 
