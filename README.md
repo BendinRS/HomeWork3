@@ -189,9 +189,11 @@ Complete!
 
 ВМ отказалась идти в перезагрузку 
 
-```Error getting authority: Error initializing authority: Error calling StartServiceByName for org.freedesktop.PolicyKit1: 
-Timeout was reached (g-io-error-quark, 24)
+```Error getting authority: Error initializing authority:
+   Error calling StartServiceByName for org.freedesktop.PolicyKit1: 
+   Timeout was reached (g-io-error-quark, 24) 
 ```
+
 
 Итог - я убил машину:)
 
