@@ -40,8 +40,99 @@
  realtime=none              extsz=4096   blocks=0, rtextents=0
  [vagrant@lvm /]$ sudo mount /dev/vg_root/lv_root /mnt/
  ```
- + командой xfsdump скопируем все даннýе с / раздела в /mnt:
+ + командой xfsdump скопируем все данные с / раздела в /mnt
+
+```[root@lvm /]# xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt  ```
+
+![Рисунок 1](http://images.vfl.ru/ii/1628693416/a85dc0bd/35464909.png "Файлы скопировались успешно")
+
++ переконфигурируем grub для того, чтобы при старте перейти в новый /
++ Сымитируем текущий root -> сделаем в него chroot и обновим grub
++ Обновим образ initrd
++ в файле /boot/grub2/grub.cfg заменяем rd.lvm.lv=VolGroup00/LogVol01 на rd.lvm.lv=vg_root/lv_root
++ Перезагружаем ВМ. Проверяем, что операция прошла успешно.
+
+![Рисунок 2](http://images.vfl.ru/ii/1628694861/ffc3b457/35465167.png "Директория перенесена успешно")
+
++ Меняем размер старой VG и возвращаем на него директорию /
+
+## Выделить том под /var в зеркало
+
++ На свободных дисках sdd и sdd создаем зеркало
+
+  ```[root@lvm /]# pvcreate /dev/sdc /dev/sdd
+  Physical volume "/dev/sdc" successfully created.
+  Physical volume "/dev/sdd" successfully created.
+  
+  [root@lvm /]# vgcreate vg_var /dev/sdc /dev/sdd
+  Volume group "vg_var" successfully created
+
+  [root@lvm /]#  lvcreate -L 950M -m1 -n lv_var vg_var
+  Rounding up size to full physical extent 952.00 MiB
+  Logical volume "lv_var" created.
+  ```
++ Создаем на нем ФС и перемещаем туда /var
+
+ ```[root@lvm /]# mkfs.ext4 /dev/vg_var/lv_var
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (4096 blocks): done
+Writing superblocks and filesystem accounting information: done 
+ ```
  
+ 
+  ```[root@lvm /]# mount /dev/vg_var/lv_var /mnt
+[root@lvm /]# cp -aR /var/* /mnt/ # rsync -avHPSAX /var/ /mnt/
+ ```
++ Сохраняем содержимое старого var
+
+```[root@lvm /]# mkdir /tmp/oldvar && mv /var/* /tmp/oldvar ```
+
++ Монтируем новый var в каталог /var
+
+```[root@lvm /]# umount /mnt
+   [root@lvm /]# mount /dev/vg_var/lv_var /var
+```
++ Правим fstab для автоматического монтирования /var
+  
+  ```[root@lvm /]# echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab ```
+ 
++ Перезагружаем ВМ и удаляем временный Volume Group
+
+## Выделить том под /home
+
++ Выделяем том под /home по тому же принципу что делали для /var
+
+![Рисунок 3](http://images.vfl.ru/ii/1628699926/86850c5c/35465825.png "Директория перенесена успешно")
+
+## /home - сделать том для снапшотов
+
++ Сгенерируем файлы в /home/ 
+```[root@lvm vagrant]# touch /home/file{1..20} ```
++ Снимаем снапшот
+ ```[root@lvm vagrant]# lvcreate -L 100MB -s -n home_snap /dev/VolGroup00/LogVol_Home
+  Rounding up size to full physical extent 128.00 MiB
+  Logical volume "home_snap" created. 
+  ```
++ Восстанавливаемся со снапшота
+
+![Рисунок 4](http://images.vfl.ru/ii/1628700564/a1b9ce5c/35465869.png "Восстановление прошло успешно")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 
