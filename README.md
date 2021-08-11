@@ -210,7 +210,6 @@ Complete!
    Logical volume opt/imen is now cached.
   ```
 + Итог
-http://images.vfl.ru/ii/1628712240/3a461e80/35467871.png
 ![Рисунок 6](http://images.vfl.ru/ii/1628712240/3a461e80/35467871.png "Процесс кэширования")
 
 
