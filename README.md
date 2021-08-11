@@ -118,6 +118,90 @@ Writing superblocks and filesystem accounting information: done
 
 ![Рисунок 4](http://images.vfl.ru/ii/1628700564/a1b9ce5c/35465869.png "Восстановление прошло успешно")
 
+***
+Официальная часть закончена:)
+
+### Попробуем поставить файловую систему ZFS/btrfs и разместим туда каталог opt
+
++ Размечаем диск. Остался свободный sdb
+
+ ``` [root@lvm vagrant]# pvcreate /dev/sdb
+     Physical volume "/dev/sdb" successfully created.
+     [root@lvm vagrant]# vgcreate test /dev/sdb
+     [root@lvm vagrant]# lvcreate -L 2G -n bendin test
+     Volume group "test" successfully created
+     WARNING: xfs signature detected on /dev/test/bendin at offset 0. Wipe it? [y/n]: y
+     Wiping xfs signature on /dev/test/bendin.
+     Logical volume "bendin" created.
+```
+
++ Устанавливаем модуль ZFS
+
+При установке модуля пришлось скипнуть проблемы. ZFS будет следущим уроком, поэтому описываю как есть:)
+```Skipped (dependency problems):
+  cpp.x86_64 0:4.8.5-44.el7                                               
+  gcc.x86_64 0:4.8.5-44.el7                                               
+  glibc-devel.x86_64 0:2.17-324.el7_9                                     
+  glibc-headers.x86_64 0:2.17-324.el7_9                                   
+  kernel-devel.x86_64 0:3.10.0-1160.36.2.el7                              
+  kernel-headers.x86_64 0:3.10.0-1160.36.2.el7                            
+  libgomp.x86_64 0:4.8.5-44.el7                                           
+  libmpc.x86_64 0:1.0.1-3.el7                                             
+  libnvpair1.x86_64 0:0.7.12-1.el7_3                                      
+  libuutil1.x86_64 0:0.7.12-1.el7_3                                       
+  libzfs2.x86_64 0:0.7.12-1.el7_3                                         
+  libzpool2.x86_64 0:0.7.12-1.el7_3                                       
+  lm_sensors-libs.x86_64 0:3.4.0-8.20160601gitf9185e5.el7                 
+  mpfr.x86_64 0:3.1.1-4.el7                                               
+  spl.x86_64 0:0.7.12-1.el7_3                                             
+  spl-dkms.noarch 0:0.7.12-1.el7_3                                        
+  sysstat.x86_64 0:10.1.5-19.el7                                          
+  zfs.x86_64 0:0.7.12-1.el7_3                                             
+  zfs-dkms.noarch 0:0.7.12-1.el7_3  
+Complete!
+```
+По итогу загрузился криво и ничего не установилось.
+
+#### Пробую разобраться с btrfs
+
++ Диск уже размечен. Иду по шаблону, но с папкой opt.
+Итог:
+
+![Рисунок 4](http://images.vfl.ru/ii/1628704344/29349eea/35466492.png "Восстановление прошло успешно")
+
++ Кэширование
+Кэшировать будем раздел с директорией var
+
++ Остался диск sde. Размечаем
++ Задаем функцию кэширования
+``` [root@lvm /]# lvconvert --type cache --cachepool cache/test ```
+
++ Ставим файловую систему
+``` [root@lvm /]# mkfs.ext4 /dev/cache/test ``` 
++ После создания раздела, нужно определить его UUID, чтобы заменить его в fstab
+
+``` [root@lvm /]# blkid|grep cache
+/dev/mapper/cache-test: UUID="49861050-7b9e-4d8a-838e-79031a136067" TYPE="ext4" 
+``` 
++ Подменяем UUID у директории /var
++ Перезагружаем сервер
+
+ВМ отказалась идти в перезагрузку 
+
+```Error getting authority: Error initializing authority: Error calling StartServiceByName for org.freedesktop.PolicyKit1: 
+Timeout was reached (g-io-error-quark, 24)
+```
+
+Итог - я убил машину:)
+
+https://winitpro.ru/index.php/2020/11/20/ssd-lvm-cache-v-linux-centos/ - по кэшированию инфу брал с этого сайта. 
+
+
+
+
+
+
+
 
 
 
