@@ -175,34 +175,7 @@ Complete!
 
 ![Рисунок 4](http://images.vfl.ru/ii/1628704344/29349eea/35466492.png "Восстановление прошло успешно")
 
-+ Кэширование
-Кэшировать будем раздел с директорией var
-
-+ Остался диск sde. Размечаем
-+ Задаем функцию кэширования
-``` [root@lvm /]# lvconvert --type cache --cachepool cache/test ```
-
-+ Ставим файловую систему
-``` [root@lvm /]# mkfs.ext4 /dev/cache/test ``` 
-+ После создания раздела, нужно определить его UUID, чтобы заменить его в fstab
-
-``` [root@lvm /]# blkid|grep cache
-/dev/mapper/cache-test: UUID="49861050-7b9e-4d8a-838e-79031a136067" TYPE="ext4" 
-``` 
-+ Подменяем UUID у директории /var
-+ Перезагружаем сервер
-
-ВМ отказалась идти в перезагрузку 
-
-```Error getting authority: Error initializing authority:
-   Error calling StartServiceByName for org.freedesktop.PolicyKit1: 
-   Timeout was reached (g-io-error-quark, 24) 
-```
-
-
-Итог - я убил машину:)
-
-## Попытка № 2
+### Кэширование
 
 ![Рисунок 5](http://images.vfl.ru/ii/1628712017/4eaab320/35467854.png "Размечены диски")
 
@@ -220,7 +193,6 @@ Complete!
 
 
 
-https://winitpro.ru/index.php/2020/11/20/ssd-lvm-cache-v-linux-centos/ - по кэшированию инфу брал с этого сайта. 
 
 
 
