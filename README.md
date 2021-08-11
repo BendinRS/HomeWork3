@@ -199,6 +199,23 @@ Complete!
 
 ## Попытка № 2
 
+![Рисунок 5](http://images.vfl.ru/ii/1628712017/4eaab320/35467854.png "Размечены диски")
+
++ opt/cache - будет пулом кэширования, opt/imen - Кэшируется
+```[root@lvm vagrant]# lvconvert --type cache opt/imen  --cachepool opt/cache
+   WARNING: Converting opt/cache to cache pool's data volume with metadata wiping.
+   THIS WILL DESTROY CONTENT OF LOGICAL VOLUME (filesystem etc.)
+   Do you really want to convert opt/cache? [y/n]: y
+   Converted opt/cache to cache pool.
+   Logical volume opt/imen is now cached.
+  ```
++ Итог
+http://images.vfl.ru/ii/1628712240/3a461e80/35467871.png
+![Рисунок 6](http://images.vfl.ru/ii/1628712240/3a461e80/35467871.png "Процесс кэширования")
+
+
+
+
 https://winitpro.ru/index.php/2020/11/20/ssd-lvm-cache-v-linux-centos/ - по кэшированию инфу брал с этого сайта. 
 
 
